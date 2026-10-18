@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" width="900" height="270" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect width="900" height="270" rx="14" fill="#ffffff" stroke="#d0d7de"/>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#57606a"/></marker>
+  </defs>
+  <g font-size="14" fill="#1f2328" text-anchor="middle">
+    <rect x="24" y="100" width="120" height="70" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="84" y="130" font-weight="600">Clean/</text><text x="84" y="152" font-size="12" fill="#57606a">photos + videos</text>
+
+    <rect x="184" y="100" width="130" height="70" rx="10" fill="#f6f8fa" stroke="#8c959f"/>
+    <text x="249" y="130" font-weight="600">Detect faces</text><text x="249" y="152" font-size="12" fill="#57606a">buffalo_l, 640×640</text>
+
+    <rect x="354" y="100" width="130" height="70" rx="10" fill="#f6f8fa" stroke="#8c959f"/>
+    <text x="419" y="130" font-weight="600">Embed</text><text x="419" y="152" font-size="12" fill="#57606a">ArcFace, 512-d</text>
+
+    <rect x="524" y="100" width="130" height="70" rx="10" fill="#f6f8fa" stroke="#8c959f"/>
+    <text x="589" y="130" font-weight="600">Match</text><text x="589" y="152" font-size="12" fill="#57606a">cosine distance</text>
+
+    <rect x="720" y="28" width="156" height="58" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="798" y="54" font-weight="600">Sorted/Person_XXXX</text><text x="798" y="72" font-size="12" fill="#57606a">≤ Similarity</text>
+
+    <rect x="720" y="106" width="156" height="58" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="798" y="132" font-weight="600">Waiting/possibly_…</text><text x="798" y="150" font-size="12" fill="#57606a">Similarity – Waiting</text>
+
+    <rect x="720" y="184" width="156" height="58" rx="10" fill="#fbefff" stroke="#c297ff"/>
+    <text x="798" y="210" font-weight="600">New person</text><text x="798" y="228" font-size="12" fill="#57606a">&gt; Waiting threshold</text>
+  </g>
+  <g stroke="#57606a" stroke-width="2" fill="none" marker-end="url(#a)">
+    <line x1="146" y1="135" x2="182" y2="135"/>
+    <line x1="316" y1="135" x2="352" y2="135"/>
+    <line x1="486" y1="135" x2="522" y2="135"/>
+    <path d="M656,125 C690,125 690,57 718,57"/>
+    <line x1="656" y1="135" x2="718" y2="135"/>
+    <path d="M656,145 C690,145 690,213 718,213"/>
+  </g>
+  <text x="450" y="258" font-size="12" fill="#57606a" text-anchor="middle">No face found → Waiting/no_face_detected/ · Source files are copied, never moved or deleted</text>
+</svg>

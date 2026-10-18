@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 150" width="900" height="150" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect width="900" height="150" rx="14" fill="#ffffff" stroke="#d0d7de"/>
+  <g font-size="13" fill="#1f2328" text-anchor="middle">
+    <rect x="40" y="50" width="400" height="36" fill="#dafbe1" stroke="#4ac26b"/>
+    <text x="240" y="73" font-weight="600">Same person → Sorted/</text>
+    <rect x="440" y="50" width="130" height="36" fill="#fff8c5" stroke="#d4a72c"/>
+    <text x="505" y="73" font-weight="600">Review → Waiting/</text>
+    <rect x="570" y="50" width="290" height="36" fill="#fbefff" stroke="#c297ff"/>
+    <text x="715" y="73" font-weight="600">Different person → new Person_XXXX</text>
+  </g>
+  <g font-size="12" fill="#57606a" text-anchor="middle">
+    <text x="40" y="106">0.00</text>
+    <text x="440" y="106">0.40 (Similarity)</text>
+    <text x="570" y="106">0.48 (Waiting)</text>
+    <text x="860" y="106">cosine distance →</text>
+    <text x="450" y="32" font-size="13" fill="#1f2328" font-weight="600">Default distance thresholds</text>
+    <text x="450" y="132">Lower distance = more similar faces. Both thresholds are adjustable in Settings.</text>
+  </g>
+</svg>
