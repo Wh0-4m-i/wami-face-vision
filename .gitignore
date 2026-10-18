@@ -218,3 +218,30 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Private Face Dataset
+Clean/
+Sorted/
+Waiting/
+
+# Biometric Data
+.face_db/
+.thumbnails/
+
+# Python Environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Downloaded Models
+*.onnx
+*.pth
+
+# Logs
+*.log
