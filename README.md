@@ -25,6 +25,8 @@
 
 ArcFace Dataset Sorter groups a photo and video collection by *who appears in it*. It detects faces, compares them with a person database that grows as it runs, and copies each file into that person's folder. Uncertain matches are set aside for review instead of being guessed.
 
+(<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/web-ui.png>)
+
 It is designed for curated collections of roughly 1–2 TB in which faces are reasonably clear, with someone reviewing the `Waiting/` folder after each run. The project is a processing pipeline and web interface built on a pre-trained model; it does not train or distribute a model of its own.
 
 | Good fit | Not a good fit |
@@ -157,7 +159,7 @@ Change these in the **Settings** tab or with `POST /api/settings`. Changes take 
 
 Both thresholds are **cosine distances** between face embeddings: 0 means identical, and lower values are stricter.
 
-![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg>)
+![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.png>)
 
 | Setting | Default | Recommended | Description |
 |---|---|---|---|
@@ -221,7 +223,7 @@ curl http://localhost:5000/api/settings
 
 ## $\color{#1F6FEB}\textsf{How It Works}$
 
-![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
+![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.png>)
 
 1. **Scan** — reads files at the top level of `Clean/` and skips those already in the processed-file index.
 2. **Detect and embed** — InsightFace detects each face and computes a 512-dimensional ArcFace embedding.
