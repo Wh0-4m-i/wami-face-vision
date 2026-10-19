@@ -25,7 +25,7 @@
 
 ArcFace Dataset Sorter groups a photo and video collection by *who appears in it*. It detects faces, compares them with a person database that grows as it runs, and copies each file into that person's folder. Uncertain matches are set aside for review instead of being guessed.
 
-(<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/web-ui.png>)
+![Web Interface](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/web-ui.png>)
 
 It is designed for curated collections of roughly 1–2 TB in which faces are reasonably clear, with someone reviewing the `Waiting/` folder after each run. The project is a processing pipeline and web interface built on a pre-trained model; it does not train or distribute a model of its own.
 
