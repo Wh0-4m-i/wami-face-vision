@@ -2,177 +2,277 @@
 
 # ArcFace Dataset Sorter
 
-**Local server for sorting photos and videos into per-person folders with ArcFace face matching.**
+**Sort large photo and video collections into per-person folders with ArcFace face recognition, entirely on your own machine.**
 
-![Python](https://img.shields.io/badge/python-3.x-blue)
-![Model](https://img.shields.io/badge/model-InsightFace%20buffalo__l-8250df)
-![Runs](https://img.shields.io/badge/runs-100%25%20local-2da44e)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](#requirements)
+[![Model](https://img.shields.io/badge/model-InsightFace%20buffalo__l-8250df)](#license)
+[![Runs locally](https://img.shields.io/badge/runs-100%25%20local-2da44e)](#security-and-privacy)
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-[ภาษาไทย](README.md) · **English**
+**English** · [ภาษาไทย](README.th.md)
 
 </div>
 
 ---
 
-## Table of Contents
-
-[Local Server & Compute](#local-server--compute) · [License](#license) · [Changelog](#changelog) · [Introduction](#introduction) · [Quick Start](#quick-start) · [Advanced Settings](#advanced-settings) · [Credits](#credits)
+[Overview](#overview) · [Features](#features) · [Requirements](#requirements) · [Quick Start](#quick-start) · [Usage](#usage) · [Configuration](#configuration) · [HTTP API](#http-api) · [How It Works](#how-it-works) · [Security and Privacy](#security-and-privacy) · [Responsible Use](#responsible-use) · [Known Limitations](#known-limitations) · [Troubleshooting](#troubleshooting) · [Changelog](#changelog) · [License](#license) · [Credits](#credits)
 
 ---
 
-## Local Server & Compute
+## Overview
 
-Everything runs on your own machine. No image, video or face data is sent anywhere.
+ArcFace Dataset Sorter groups a photo and video collection by *who appears in it*. It detects faces, compares them with a person database that grows as it runs, and copies each file into that person's folder. Uncertain matches are set aside for review instead of being guessed.
 
-| | |
+It is designed for curated collections of roughly 1–2 TB in which faces are reasonably clear, with someone reviewing the `Waiting/` folder after each run. The project is a processing pipeline and web interface built on a pre-trained model; it does not train or distribute a model of its own.
+
+| Good fit | Not a good fit |
 |---|---|
-| **Server** | Flask, `http://localhost:5000` (port 5000) |
-| **Network binding** | `0.0.0.0` — reachable by other machines on the same network |
-| **Authentication** | None |
-| **Model** | InsightFace `buffalo_l` (detection + ArcFace recognition), downloaded on first run |
-| **Inference** | ONNX Runtime — tries CUDA (NVIDIA GPU) first, falls back to CPU |
-| **Processing** | One file at a time (no parallelism) |
-| **RAM** | At most 20 embedding samples per person (~40 KB per person) |
-| **Video cost** | ~10 decoded frames per clip, independent of clip length |
-| **Disk** | Source files are **copied**, so plan for about as much free space as the data you process |
-| **State** | `.face_db/` (embeddings, processed-file index) and `.thumbnails/`, saved every 10 files |
-| **Speed** | Not benchmarked — depends on GPU/CPU and file count. Try a small subset first |
+| Curated, cleaned datasets | CCTV or surveillance footage |
+| Clear faces | Very small or blurry faces |
+| Batch processing | Real-time processing |
+| Manual review of uncertain results | Identity verification or authentication |
 
-> **Security:** the server has no login and listens on all interfaces. Run it only on a trusted network.
-> **Privacy:** `.face_db/` and `.thumbnails/` contain biometric data. Never publish them (already in `.gitignore`).
+## Features
 
----
-
-## License
-
-The code in this repository is released under the [MIT License](LICENSE).
-
-The MIT License **does not cover the model**. Models downloaded through InsightFace have their own terms
-(as understood, research / non-commercial use). **Check the latest terms in the
-[InsightFace repository](https://github.com/deepinsight/insightface) before any commercial use.**
-
----
-
-## Changelog
-
-### 2026-10-19 — v1.0.0
-
-**Added**
-- Face detection and embedding with InsightFace `buffalo_l` (ArcFace), CUDA with CPU fallback
-- Sorting of photos and videos into `Sorted/Person_XXXX/`, with a `Waiting/` folder for uncertain matches and files without faces
-- Video support: frames sampled from the start of each clip, repeated faces within a clip merged into one person
-- Persistent person database and processed-file index; stop and resume without redoing work
-- Web UI: live progress, settings, person list with thumbnails, rename and merge
-- Windows helper scripts `INSTALL.bat` and `START.bat`
-- English and Thai documentation, MIT license
-
-**Changed**
-- Web UI text translated to English
-
----
-
-## Introduction
-
-**ArcFace Dataset Sorter** organizes an image/video collection by *who appears in it*.
-It is built for small-to-mid-size collections (roughly **1–2 TB**) that have **already been curated and cleaned**:
-faces are reasonably clear, and a person can review the `Waiting/` folder afterwards.
-
-It is a pipeline and web UI on top of a pre-trained model. It does not train or ship its own model.
-
-![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
-
-**How it works**
-
-1. Reads files from `Clean/` (top level only — **subfolders are not scanned**) and skips files already processed.
-2. Detects faces and builds a 512-dimensional ArcFace embedding for each.
-3. Compares each embedding with the person database using cosine distance and sorts the file:
-   - close enough → `Sorted/Person_XXXX/`
-   - borderline → `Waiting/possibly_Person_XXXX/`
-   - too far → a new person is created
-   - no face found → `Waiting/no_face_detected/`
-4. Videos: frames are sampled from the beginning of the clip; repeated faces in the same clip count as one person.
-5. Source files are **copied, never moved or deleted**.
-
-**Good fit:** curated datasets, clear faces, batch runs, someone to review `Waiting/`.
-**Not a good fit:** CCTV, very small or blurry faces, real-time use, or identity verification.
+- **Fully offline** — photos, videos and face data never leave your machine.
+- **Photos and videos** — videos are sampled from the start of each clip, and repeated faces within a clip count as one person.
+- **Three-way decision** — confident matches are sorted, borderline matches go to review, and unknown faces become new persons.
+- **Non-destructive** — source files are copied, never moved or deleted.
+- **Resumable** — the person database and processed-file index persist, so a stopped run continues where it left off.
+- **Web interface** — live progress, settings, a person list with thumbnails, rename and merge.
+- **HTTP API** — start runs, read progress and manage persons from scripts.
+- **GPU acceleration** — CUDA through ONNX Runtime, with automatic fallback to CPU.
 
 **Supported formats**
-Images: JPG, JPEG, PNG, BMP, WEBP, GIF · Videos: MP4, AVI, MOV, MKV, WMV, FLV, WEBM
 
----
+| Type | Extensions |
+|---|---|
+| Images | JPG, JPEG, PNG, BMP, WEBP, GIF |
+| Videos | MP4, AVI, MOV, MKV, WMV, FLV, WEBM |
+
+## Requirements
+
+| Component | Requirement |
+|---|---|
+| Operating system | Windows (primary platform). Linux and macOS are supported on a best-effort basis; see [Known Limitations](#known-limitations). |
+| Python | 3.10 or newer (`INSTALL.bat` installs 3.11) |
+| Python packages | Listed in [`requirements.txt`](requirements.txt) |
+| GPU | Optional. NVIDIA GPU with CUDA; see [GPU acceleration](#gpu-acceleration-optional). |
+| Disk space | About as much free space as the data being processed, because files are copied |
+| Network | Required on first start only, to download the model |
 
 ## Quick Start
 
-**Requirements:** Python 3 and the packages in `requirements.txt` (InsightFace, ONNX Runtime, OpenCV, NumPy, Flask, …).
-An NVIDIA GPU is optional.
-
 ### Windows
-1. Double-click `INSTALL.bat` (installs Python 3.11 via winget if missing, then the dependencies)
-2. Double-click `START.bat`
-3. Open http://localhost:5000
+
+1. Run `INSTALL.bat`. It installs Python 3.11 with winget if Python is missing, then installs the dependencies.
+2. Run `START.bat`.
+3. Open <http://localhost:5000>.
 
 ### Linux / macOS
+
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python app.py
 ```
-Then open http://localhost:5000. The "open folder" buttons call `explorer` and only work on Windows;
-everything else is cross-platform (not tested on other systems).
 
-### Use it
-1. Put curated photos/videos directly in `Clean/` (no subfolders).
-2. Press **Start** and watch the live progress.
-3. Review results:
+Then open <http://localhost:5000>.
 
+On first start, the InsightFace `buffalo_l` model is downloaded automatically.
+
+### GPU acceleration (optional)
+
+ONNX Runtime is distributed as two separate packages: `onnxruntime` (CPU) and `onnxruntime-gpu` (CUDA). Install only one of them. To enable the GPU:
+
+```bash
+pip uninstall -y onnxruntime
+pip install onnxruntime-gpu
 ```
-Clean/    ← input
-Sorted/   ← one folder per person (rename or merge from the web UI)
-Waiting/  ← uncertain files for manual review
+
+Install CUDA and cuDNN versions that match your ONNX Runtime release, as listed in the [ONNX Runtime CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements). Installing or upgrading InsightFace can reinstall `onnxruntime`; repeat the swap afterwards.
+
+## Usage
+
+1. Copy curated photos and videos directly into `Clean/`. Subfolders are not scanned.
+2. Click **Start** in the web interface and follow the progress.
+3. Review the results:
+
+```text
+Clean/                        Input, left unchanged
+Sorted/
+├── Person_0001/              One folder per person (rename or merge in the web interface)
+└── Person_0002/
+Waiting/
+├── possibly_Person_0001/     Borderline matches to review
+└── no_face_detected/         Files in which no face was found
 ```
 
-Stopping and starting again continues where you left off.
+Clicking **Stop** and then **Start** again resumes from where processing stopped.
 
----
+> [!TIP]
+> Before a large run, process a small sample and check `Sorted/` and `Waiting/` to tune the thresholds for your data.
 
-## Advanced Settings
+## Configuration
 
-Change settings in the **Settings** tab or with `POST /api/settings`. Changes apply from the next file.
+### Command-line options
+
+| Option | Default | Description |
+|---|---|---|
+| `--host` | `127.0.0.1` | Address to bind to. Use `0.0.0.0` to allow access from other machines (see [Security and Privacy](#security-and-privacy)). |
+| `--port` | `5000` | Port to listen on. |
+
+```bash
+python app.py --host 0.0.0.0 --port 5050
+```
+
+On Windows, add the options to the `python app.py` line in `START.bat`.
+
+### Processing settings
+
+Change these in the **Settings** tab or with `POST /api/settings`. Changes take effect from the next file processed.
+
+Both thresholds are **cosine distances** between face embeddings: 0 means identical, and lower values are stricter.
 
 ![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg>)
 
-| Setting | Default | Description |
+| Setting | Default | Recommended | Description |
+|---|---|---|---|
+| Similarity Threshold | 0.40 | 0.35–0.45 | A face within this distance of a known person is a match. |
+| Waiting Threshold | 0.48 | — | Files between the two thresholds go to `Waiting/`; faces beyond this distance become a new person. |
+| Min Face Confidence | 0.70 | — | Minimum detector confidence for a face to be used. |
+| Video Scan Length | 20 s | 10–20 s | Only this opening part of each video is scanned. |
+| Video Frame Interval | 2.0 s | 1–3 s | Time between sampled frames. With the defaults, about 10 frames per clip. |
+
+Settings apply only to files processed after the change. To re-evaluate files that were already processed, clear the processed-file index with `POST /api/reset-processed` and start a new run.
+
+### Environment variables
+
+| Variable | Default | Description |
 |---|---|---|
-| Similarity Threshold | 0.40 | Max cosine distance to count as the same person. Lower = stricter (suggested 0.35–0.45) |
-| Waiting Threshold | 0.48 | Beyond this a face is a new person; between the two thresholds the file goes to Waiting |
-| Min Face Confidence | 0.70 | Minimum detector confidence for a face |
-| Video Scan Length | 20 s | Only the start of each clip is scanned (suggested 10–20) |
-| Video Frame Interval | 2.0 s | One sampled frame every N seconds, ≈10 frames per clip (suggested 1–3) |
+| `ARCFACE_MIN_FACE_SIZE` | `50` | Minimum face size in pixels. Smaller faces are ignored. |
+| `ARCFACE_SAVE_EVERY_N_FILES` | `10` | How often, in files, the database is written to disk. |
 
-Constants in `face_recognizer.py`: `MIN_FACE_SIZE` (50 px), `SAVE_EVERY_N_FILES` (10).
-After changing thresholds, call `POST /api/reset-processed` to rescan everything.
+```bash
+# Linux / macOS
+ARCFACE_MIN_FACE_SIZE=40 python app.py
 
-**HTTP API**
+# Windows (Command Prompt)
+set ARCFACE_MIN_FACE_SIZE=40
+python app.py
+```
 
-| Endpoint | Purpose |
+## HTTP API
+
+The web interface is built on the same API. Base URL: `http://localhost:5000`.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/start` | Start processing |
+| `POST` | `/api/stop` | Stop processing |
+| `GET` | `/api/status` | Progress, statistics and recent log entries |
+| `GET` | `/api/stats/summary` | Summary counts |
+| `GET` | `/api/persons` | List persons |
+| `POST` | `/api/persons/<id>/rename` | Rename a person |
+| `POST` | `/api/persons/merge` | Merge two persons |
+| `GET` | `/api/thumbnail/<id>` | Face thumbnail of a person |
+| `GET` | `/api/folders` | Folder listing |
+| `GET` | `/api/settings` | Read settings |
+| `POST` | `/api/settings` | Update settings |
+| `POST` | `/api/reset-processed` | Clear the processed-file index |
+
+```bash
+# Start a run and check progress
+curl -X POST http://localhost:5000/api/start
+curl http://localhost:5000/api/status
+
+# Read the current settings
+curl http://localhost:5000/api/settings
+```
+
+## How It Works
+
+![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
+
+1. **Scan** — reads files at the top level of `Clean/` and skips those already in the processed-file index.
+2. **Detect and embed** — InsightFace detects each face and computes a 512-dimensional ArcFace embedding.
+3. **Match** — each embedding is compared with the person database by cosine distance:
+   - within the Similarity Threshold → `Sorted/Person_XXXX/`
+   - between the two thresholds → `Waiting/possibly_Person_XXXX/`
+   - beyond the Waiting Threshold → a new person is created
+   - no face detected → `Waiting/no_face_detected/`
+4. **Videos** — frames are sampled at a fixed interval from the start of the clip, and repeated faces within the clip are merged into one person.
+5. **Copy** — the file is copied to its destination; the source is never modified.
+
+| Aspect | Detail |
 |---|---|
-| `POST /api/start`, `POST /api/stop` | Start / stop processing |
-| `GET /api/status` | Progress, statistics and log |
-| `GET /api/persons` | List persons |
-| `POST /api/persons/<id>/rename` | Rename a person |
-| `POST /api/persons/merge` | Merge two persons |
-| `GET /api/thumbnail/<id>` | Face thumbnail |
-| `GET /api/folders` | Folder listing |
-| `GET` / `POST /api/settings` | Read / change settings |
-| `POST /api/reset-processed` | Forget processed files |
-| `GET /api/stats/summary` | Summary counts |
+| Model | InsightFace `buffalo_l` (face detection and ArcFace recognition) |
+| Inference | ONNX Runtime; CUDA when available, otherwise CPU |
+| Processing | Sequential, one file at a time |
+| Video cost | About 10 decoded frames per clip with the default settings, regardless of clip length |
+| Person database | Up to 20 embeddings per person (about 40 KB) |
+| State | `.face_db/` (person database, processed-file index) and `.thumbnails/`, written to disk every 10 files |
+| Logs | `face_recognition.log` and the console |
 
-Logs are written to `face_recognition.log` and to the console.
+## Security and Privacy
 
----
+- **Local by default.** The server binds to `127.0.0.1` and is reachable only from this computer.
+- **No authentication.** Anyone who can reach the server can view thumbnails, rename and merge persons, and start or stop runs. Use `--host 0.0.0.0` only on a trusted network, and never expose the port to the internet.
+- **No outbound data.** The only network access is the one-time model download.
+- **Biometric data.** `.face_db/` and `.thumbnails/` contain face embeddings and face images. Both are excluded in `.gitignore`; do not publish or share them. Deleting both folders removes the person database and thumbnails.
+
+## Responsible Use
+
+Face recognition processes biometric data, which many laws treat as sensitive personal data, including Thailand's Personal Data Protection Act (PDPA) and the EU General Data Protection Regulation (GDPR). Use this tool only on collections you are entitled to process, with a lawful basis such as the consent of the people pictured. It is not intended for surveillance, tracking individuals, or identity verification.
+
+## Known Limitations
+
+- Only the top level of `Clean/` is scanned; subfolders are ignored.
+- Files are processed one at a time.
+- Only the opening part of each video is scanned, so people who appear later in a clip are not detected.
+- The **Open folder** buttons use Windows Explorer and work only on Windows.
+- Accuracy drops for small, blurred, occluded or extreme-angle faces; such files tend to end up in `Waiting/`.
+
+## Troubleshooting
+
+| Symptom | Solution |
+|---|---|
+| Processing runs on the CPU although an NVIDIA GPU is installed | The CPU package `onnxruntime` is installed, alone or alongside `onnxruntime-gpu`. Follow [GPU acceleration](#gpu-acceleration-optional) and check that the CUDA and cuDNN versions match. |
+| `pip install` fails on Windows with "Microsoft Visual C++ 14.0 or greater is required" | Install Microsoft C++ Build Tools with the *Desktop development with C++* workload, then run `INSTALL.bat` again. |
+| The model download fails or is interrupted | Check the internet connection, delete the incomplete `buffalo_l` folder under `~/.insightface/models/` (InsightFace's default location) and start again. |
+| Port 5000 is already in use | Start on another port, for example `python app.py --port 5050`. |
+| Too many files end up in `Waiting/` | Raise the Similarity Threshold slightly (for example 0.42–0.45). |
+| Different people are sorted into the same person | Lower the Similarity Threshold (for example 0.35–0.38), reset the processed-file index and run again. |
+| One person is split across several persons | Use **Merge** in the web interface. Raising the Similarity Threshold slightly reduces splits. |
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+The source code in this repository is released under the [MIT License](LICENSE).
+
+**The MIT License does not cover the model weights.** The InsightFace pretrained models used by this project, including `buffalo_l`, which is downloaded automatically on first start, are licensed by InsightFace for **non-commercial research use only**. For commercial use, obtain a license from InsightFace or replace the model with one you are licensed to use. See the [InsightFace license](https://github.com/deepinsight/insightface#license) for the current terms.
 
 ## Credits
 
 - **[InsightFace](https://github.com/deepinsight/insightface)** — library and the `buffalo_l` (ArcFace) model used for detection and embeddings
 - **ArcFace** — Deng et al., *ArcFace: Additive Angular Margin Loss for Deep Face Recognition*, CVPR 2019
 - [ONNX Runtime](https://onnxruntime.ai/) · [OpenCV](https://opencv.org/) · [NumPy](https://numpy.org/) · [Flask](https://flask.palletsprojects.com/) · [Pillow](https://python-pillow.org/)
+
+<details>
+<summary>BibTeX</summary>
+
+```bibtex
+@inproceedings{deng2019arcface,
+  title     = {ArcFace: Additive Angular Margin Loss for Deep Face Recognition},
+  author    = {Deng, Jiankang and Guo, Jia and Xue, Niannan and Zafeiriou, Stefanos},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {4690--4699},
+  year      = {2019}
+}
+```
+
+</details>
