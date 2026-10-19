@@ -80,7 +80,7 @@ MIT **ไม่ครอบคลุมตัวโมเดล** โมเด�
 
 เป็น pipeline และหน้าเว็บที่ต่อยอดจากโมเดลสำเร็จรูป ไม่ได้เทรนหรือแจกโมเดลของตัวเอง
 
-![ขั้นตอนการประมวลผล](ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg)
+![ขั้นตอนการประมวลผล](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
 
 **วิธีทำงาน**
 
@@ -139,7 +139,7 @@ Waiting/  ← ไฟล์ที่ไม่มั่นใจ รอตรว�
 
 ปรับในแท็บ **Settings** หรือ `POST /api/settings` มีผลตั้งแต่ไฟล์ถัดไป
 
-![เกณฑ์ระยะห่าง](ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg)
+![เกณฑ์ระยะห่าง](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg>)
 
 | ค่า | Default | คำอธิบาย |
 |---|---|---|
