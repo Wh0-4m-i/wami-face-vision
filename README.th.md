@@ -25,6 +25,8 @@
 
 ArcFace Dataset Sorter จัดกลุ่มคลังรูปภาพและวิดีโอตาม *บุคคลที่ปรากฏ* โดยตรวจจับใบหน้า เปรียบเทียบกับฐานข้อมูลบุคคลที่ขยายขึ้นเรื่อย ๆ ระหว่างประมวลผล แล้วคัดลอกไฟล์ไปไว้ในโฟลเดอร์ของบุคคลนั้น ไฟล์ที่ผลการจับคู่ไม่แน่ชัดจะถูกแยกไว้ให้ตรวจสอบแทนการเดา
 
+![Web Interface](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/web-ui.png>)
+
 ออกแบบมาสำหรับคลังข้อมูลที่คัดกรองแล้ว ขนาดประมาณ 1–2 TB ซึ่งใบหน้าค่อนข้างชัด และมีผู้ตรวจสอบโฟลเดอร์ `Waiting/` หลังประมวลผลแต่ละรอบ โปรเจกต์นี้เป็น pipeline และเว็บอินเทอร์เฟซที่สร้างบนโมเดลที่ฝึกไว้แล้ว ไม่ได้ฝึกหรือแจกจ่ายโมเดลของตัวเอง
 
 | เหมาะกับ | ไม่เหมาะกับ |
@@ -157,7 +159,7 @@ python app.py --host 0.0.0.0 --port 5050
 
 threshold ทั้งสองค่าเป็น **ระยะห่างแบบ cosine (cosine distance)** ระหว่าง embedding ของใบหน้า โดย 0 หมายถึงเหมือนกันทุกประการ และค่ายิ่งต่ำยิ่งเข้มงวด
 
-![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg>)
+![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.png>)
 
 | การตั้งค่า | ค่าเริ่มต้น | ค่าที่แนะนำ | คำอธิบาย |
 |---|---|---|---|
@@ -221,7 +223,7 @@ curl http://localhost:5000/api/settings
 
 ## $\color{#1F6FEB}\textsf{หลักการทำงาน}$
 
-![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
+![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.png>)
 
 1. **สแกน** — อ่านไฟล์ที่อยู่ชั้นบนสุดของ `Clean/` และข้ามไฟล์ที่ประมวลผลไปแล้ว
 2. **ตรวจจับและสร้าง embedding** — InsightFace ตรวจจับใบหน้าและสร้าง ArcFace embedding ขนาด 512 มิติให้แต่ละใบหน้า
