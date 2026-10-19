@@ -80,7 +80,7 @@ faces are reasonably clear, and a person can review the `Waiting/` folder afterw
 
 It is a pipeline and web UI on top of a pre-trained model. It does not train or ship its own model.
 
-![Processing pipeline](docs/pipeline.svg)
+![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
 
 **How it works**
 
@@ -139,7 +139,7 @@ Stopping and starting again continues where you left off.
 
 Change settings in the **Settings** tab or with `POST /api/settings`. Changes apply from the next file.
 
-![Distance thresholds](docs/thresholds.svg)
+![Distance thresholds](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/thresholds.svg>)
 
 | Setting | Default | Description |
 |---|---|---|
