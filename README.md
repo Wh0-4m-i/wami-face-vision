@@ -1,6 +1,6 @@
 <div align="center">
 
-# ArcFace Dataset Sorter
+# $\color{#1F6FEB}\textsf{ArcFace Dataset Sorter}$
 
 **Sort large photo and video collections into per-person folders with ArcFace face recognition, entirely on your own machine.**
 
@@ -19,7 +19,9 @@
 
 ---
 
-## Overview
+<a id="overview"></a>
+
+## $\color{#1F6FEB}\textsf{Overview}$
 
 ArcFace Dataset Sorter groups a photo and video collection by *who appears in it*. It detects faces, compares them with a person database that grows as it runs, and copies each file into that person's folder. Uncertain matches are set aside for review instead of being guessed.
 
@@ -32,7 +34,9 @@ It is designed for curated collections of roughly 1–2 TB in which faces are re
 | Batch processing | Real-time processing |
 | Manual review of uncertain results | Identity verification or authentication |
 
-## Features
+<a id="features"></a>
+
+## $\color{#1F6FEB}\textsf{Features}$
 
 - **Fully offline** — photos, videos and face data never leave your machine.
 - **Photos and videos** — videos are sampled from the start of each clip, and repeated faces within a clip count as one person.
@@ -50,7 +54,9 @@ It is designed for curated collections of roughly 1–2 TB in which faces are re
 | Images | JPG, JPEG, PNG, BMP, WEBP, GIF |
 | Videos | MP4, AVI, MOV, MKV, WMV, FLV, WEBM |
 
-## Requirements
+<a id="requirements"></a>
+
+## $\color{#1F6FEB}\textsf{Requirements}$
 
 | Component | Requirement |
 |---|---|
@@ -61,15 +67,21 @@ It is designed for curated collections of roughly 1–2 TB in which faces are re
 | Disk space | About as much free space as the data being processed, because files are copied |
 | Network | Required on first start only, to download the model |
 
-## Quick Start
+<a id="quick-start"></a>
 
-### Windows
+## $\color{#1F6FEB}\textsf{Quick Start}$
+
+<a id="windows"></a>
+
+### $\color{#8250DF}\textsf{Windows}$
 
 1. Run `INSTALL.bat`. It installs Python 3.11 with winget if Python is missing, then installs the dependencies.
 2. Run `START.bat`.
 3. Open <http://localhost:5000>.
 
-### Linux / macOS
+<a id="linux--macos"></a>
+
+### $\color{#8250DF}\textsf{Linux / macOS}$
 
 ```bash
 python3 -m venv .venv
@@ -82,7 +94,9 @@ Then open <http://localhost:5000>.
 
 On first start, the InsightFace `buffalo_l` model is downloaded automatically.
 
-### GPU acceleration (optional)
+<a id="gpu-acceleration-optional"></a>
+
+### $\color{#8250DF}\textsf{GPU acceleration (optional)}$
 
 ONNX Runtime is distributed as two separate packages: `onnxruntime` (CPU) and `onnxruntime-gpu` (CUDA). Install only one of them. To enable the GPU:
 
@@ -93,7 +107,9 @@ pip install onnxruntime-gpu
 
 Install CUDA and cuDNN versions that match your ONNX Runtime release, as listed in the [ONNX Runtime CUDA requirements](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements). Installing or upgrading InsightFace can reinstall `onnxruntime`; repeat the swap afterwards.
 
-## Usage
+<a id="usage"></a>
+
+## $\color{#1F6FEB}\textsf{Usage}$
 
 1. Copy curated photos and videos directly into `Clean/`. Subfolders are not scanned.
 2. Click **Start** in the web interface and follow the progress.
@@ -114,9 +130,13 @@ Clicking **Stop** and then **Start** again resumes from where processing stopped
 > [!TIP]
 > Before a large run, process a small sample and check `Sorted/` and `Waiting/` to tune the thresholds for your data.
 
-## Configuration
+<a id="configuration"></a>
 
-### Command-line options
+## $\color{#1F6FEB}\textsf{Configuration}$
+
+<a id="command-line-options"></a>
+
+### $\color{#8250DF}\textsf{Command-line options}$
 
 | Option | Default | Description |
 |---|---|---|
@@ -129,7 +149,9 @@ python app.py --host 0.0.0.0 --port 5050
 
 On Windows, add the options to the `python app.py` line in `START.bat`.
 
-### Processing settings
+<a id="processing-settings"></a>
+
+### $\color{#8250DF}\textsf{Processing settings}$
 
 Change these in the **Settings** tab or with `POST /api/settings`. Changes take effect from the next file processed.
 
@@ -147,7 +169,9 @@ Both thresholds are **cosine distances** between face embeddings: 0 means identi
 
 Settings apply only to files processed after the change. To re-evaluate files that were already processed, clear the processed-file index with `POST /api/reset-processed` and start a new run.
 
-### Environment variables
+<a id="environment-variables"></a>
+
+### $\color{#8250DF}\textsf{Environment variables}$
 
 | Variable | Default | Description |
 |---|---|---|
@@ -163,7 +187,9 @@ set ARCFACE_MIN_FACE_SIZE=40
 python app.py
 ```
 
-## HTTP API
+<a id="http-api"></a>
+
+## $\color{#1F6FEB}\textsf{HTTP API}$
 
 The web interface is built on the same API. Base URL: `http://localhost:5000`.
 
@@ -191,7 +217,9 @@ curl http://localhost:5000/api/status
 curl http://localhost:5000/api/settings
 ```
 
-## How It Works
+<a id="how-it-works"></a>
+
+## $\color{#1F6FEB}\textsf{How It Works}$
 
 ![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
 
@@ -215,18 +243,24 @@ curl http://localhost:5000/api/settings
 | State | `.face_db/` (person database, processed-file index) and `.thumbnails/`, written to disk every 10 files |
 | Logs | `face_recognition.log` and the console |
 
-## Security and Privacy
+<a id="security-and-privacy"></a>
+
+## $\color{#1F6FEB}\textsf{Security and Privacy}$
 
 - **Local by default.** The server binds to `127.0.0.1` and is reachable only from this computer.
 - **No authentication.** Anyone who can reach the server can view thumbnails, rename and merge persons, and start or stop runs. Use `--host 0.0.0.0` only on a trusted network, and never expose the port to the internet.
 - **No outbound data.** The only network access is the one-time model download.
 - **Biometric data.** `.face_db/` and `.thumbnails/` contain face embeddings and face images. Both are excluded in `.gitignore`; do not publish or share them. Deleting both folders removes the person database and thumbnails.
 
-## Responsible Use
+<a id="responsible-use"></a>
+
+## $\color{#1F6FEB}\textsf{Responsible Use}$
 
 Face recognition processes biometric data, which many laws treat as sensitive personal data, including Thailand's Personal Data Protection Act (PDPA) and the EU General Data Protection Regulation (GDPR). Use this tool only on collections you are entitled to process, with a lawful basis such as the consent of the people pictured. It is not intended for surveillance, tracking individuals, or identity verification.
 
-## Known Limitations
+<a id="known-limitations"></a>
+
+## $\color{#1F6FEB}\textsf{Known Limitations}$
 
 - Only the top level of `Clean/` is scanned; subfolders are ignored.
 - Files are processed one at a time.
@@ -234,7 +268,9 @@ Face recognition processes biometric data, which many laws treat as sensitive pe
 - The **Open folder** buttons use Windows Explorer and work only on Windows.
 - Accuracy drops for small, blurred, occluded or extreme-angle faces; such files tend to end up in `Waiting/`.
 
-## Troubleshooting
+<a id="troubleshooting"></a>
+
+## $\color{#1F6FEB}\textsf{Troubleshooting}$
 
 | Symptom | Solution |
 |---|---|
@@ -246,17 +282,23 @@ Face recognition processes biometric data, which many laws treat as sensitive pe
 | Different people are sorted into the same person | Lower the Similarity Threshold (for example 0.35–0.38), reset the processed-file index and run again. |
 | One person is split across several persons | Use **Merge** in the web interface. Raising the Similarity Threshold slightly reduces splits. |
 
-## Changelog
+<a id="changelog"></a>
+
+## $\color{#1F6FEB}\textsf{Changelog}$
 
 See [CHANGELOG.md](CHANGELOG.md).
 
-## License
+<a id="license"></a>
+
+## $\color{#1F6FEB}\textsf{License}$
 
 The source code in this repository is released under the [MIT License](LICENSE).
 
 **The MIT License does not cover the model weights.** The InsightFace pretrained models used by this project, including `buffalo_l`, which is downloaded automatically on first start, are licensed by InsightFace for **non-commercial research use only**. For commercial use, obtain a license from InsightFace or replace the model with one you are licensed to use. See the [InsightFace license](https://github.com/deepinsight/insightface#license) for the current terms.
 
-## Credits
+<a id="credits"></a>
+
+## $\color{#1F6FEB}\textsf{Credits}$
 
 - **[InsightFace](https://github.com/deepinsight/insightface)** — library and the `buffalo_l` (ArcFace) model used for detection and embeddings
 - **ArcFace** — Deng et al., *ArcFace: Additive Angular Margin Loss for Deep Face Recognition*, CVPR 2019

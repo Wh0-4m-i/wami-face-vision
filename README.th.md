@@ -1,6 +1,6 @@
 <div align="center">
 
-# ArcFace Dataset Sorter
+# $\color{#1F6FEB}\textsf{ArcFace Dataset Sorter}$
 
 **จัดเรียงคลังรูปภาพและวิดีโอขนาดใหญ่ลงโฟลเดอร์รายบุคคลด้วยการจดจำใบหน้า ArcFace โดยประมวลผลบนเครื่องของคุณทั้งหมด**
 
@@ -21,7 +21,7 @@
 
 <a id="overview"></a>
 
-## ภาพรวม
+## $\color{#1F6FEB}\textsf{ภาพรวม}$
 
 ArcFace Dataset Sorter จัดกลุ่มคลังรูปภาพและวิดีโอตาม *บุคคลที่ปรากฏ* โดยตรวจจับใบหน้า เปรียบเทียบกับฐานข้อมูลบุคคลที่ขยายขึ้นเรื่อย ๆ ระหว่างประมวลผล แล้วคัดลอกไฟล์ไปไว้ในโฟลเดอร์ของบุคคลนั้น ไฟล์ที่ผลการจับคู่ไม่แน่ชัดจะถูกแยกไว้ให้ตรวจสอบแทนการเดา
 
@@ -36,7 +36,7 @@ ArcFace Dataset Sorter จัดกลุ่มคลังรูปภาพแ
 
 <a id="features"></a>
 
-## คุณสมบัติ
+## $\color{#1F6FEB}\textsf{คุณสมบัติ}$
 
 - **ทำงานออฟไลน์ทั้งหมด** — รูปภาพ วิดีโอ และข้อมูลใบหน้าไม่ถูกส่งออกจากเครื่อง
 - **รองรับทั้งรูปภาพและวิดีโอ** — วิดีโอจะถูกสุ่มเฟรมจากช่วงต้นคลิป และใบหน้าที่ซ้ำกันในคลิปเดียวกันนับเป็นบุคคลเดียว
@@ -56,7 +56,7 @@ ArcFace Dataset Sorter จัดกลุ่มคลังรูปภาพแ
 
 <a id="requirements"></a>
 
-## ความต้องการของระบบ
+## $\color{#1F6FEB}\textsf{ความต้องการของระบบ}$
 
 | ส่วนประกอบ | ข้อกำหนด |
 |---|---|
@@ -69,15 +69,19 @@ ArcFace Dataset Sorter จัดกลุ่มคลังรูปภาพแ
 
 <a id="quick-start"></a>
 
-## เริ่มต้นใช้งาน
+## $\color{#1F6FEB}\textsf{เริ่มต้นใช้งาน}$
 
-### Windows
+<a id="windows"></a>
+
+### $\color{#8250DF}\textsf{Windows}$
 
 1. รัน `INSTALL.bat` ถ้ายังไม่มี Python สคริปต์จะติดตั้ง Python 3.11 ผ่าน winget แล้วติดตั้งแพ็กเกจที่จำเป็น
 2. รัน `START.bat`
 3. เปิด <http://localhost:5000>
 
-### Linux / macOS
+<a id="linux--macos"></a>
+
+### $\color{#8250DF}\textsf{Linux / macOS}$
 
 ```bash
 python3 -m venv .venv
@@ -92,7 +96,7 @@ python app.py
 
 <a id="gpu-acceleration-optional"></a>
 
-### การเร่งความเร็วด้วย GPU (ไม่บังคับ)
+### $\color{#8250DF}\textsf{การเร่งความเร็วด้วย GPU (ไม่บังคับ)}$
 
 ONNX Runtime แยกเป็นสองแพ็กเกจ คือ `onnxruntime` (CPU) และ `onnxruntime-gpu` (CUDA) ควรติดตั้งเพียงแพ็กเกจเดียว หากต้องการใช้ GPU:
 
@@ -105,7 +109,7 @@ pip install onnxruntime-gpu
 
 <a id="usage"></a>
 
-## วิธีใช้งาน
+## $\color{#1F6FEB}\textsf{วิธีใช้งาน}$
 
 1. คัดลอกรูปภาพและวิดีโอที่คัดกรองแล้วไว้ในโฟลเดอร์ `Clean/` โดยตรง โปรแกรมไม่สแกนโฟลเดอร์ย่อย
 2. กด **Start** ในเว็บอินเทอร์เฟซแล้วติดตามความคืบหน้า
@@ -128,9 +132,11 @@ Waiting/
 
 <a id="configuration"></a>
 
-## การตั้งค่า
+## $\color{#1F6FEB}\textsf{การตั้งค่า}$
 
-### ตัวเลือกบรรทัดคำสั่ง
+<a id="ตวเลอกบรรทดคำสง"></a>
+
+### $\color{#8250DF}\textsf{ตัวเลือกบรรทัดคำสั่ง}$
 
 | ตัวเลือก | ค่าเริ่มต้น | คำอธิบาย |
 |---|---|---|
@@ -143,7 +149,9 @@ python app.py --host 0.0.0.0 --port 5050
 
 บน Windows ให้เพิ่มตัวเลือกต่อท้ายบรรทัด `python app.py` ในไฟล์ `START.bat`
 
-### การตั้งค่าการประมวลผล
+<a id="การตงคาการประมวลผล"></a>
+
+### $\color{#8250DF}\textsf{การตั้งค่าการประมวลผล}$
 
 ปรับได้ในแท็บ **Settings** หรือผ่าน `POST /api/settings` ค่าใหม่มีผลตั้งแต่ไฟล์ถัดไป
 
@@ -161,7 +169,9 @@ threshold ทั้งสองค่าเป็น **ระยะห่าง�
 
 ค่าที่ปรับมีผลเฉพาะไฟล์ที่ประมวลผลหลังการเปลี่ยนแปลง หากต้องการประเมินไฟล์ที่ประมวลผลไปแล้วใหม่ ให้ล้างรายการไฟล์ที่ประมวลผลแล้วด้วย `POST /api/reset-processed` แล้วเริ่มประมวลผลรอบใหม่
 
-### ตัวแปรสภาพแวดล้อม (Environment variables)
+<a id="ตวแปรสภาพแวดลอม-environment-variables"></a>
+
+### $\color{#8250DF}\textsf{ตัวแปรสภาพแวดล้อม (Environment variables)}$
 
 | ตัวแปร | ค่าเริ่มต้น | คำอธิบาย |
 |---|---|---|
@@ -179,7 +189,7 @@ python app.py
 
 <a id="http-api"></a>
 
-## HTTP API
+## $\color{#1F6FEB}\textsf{HTTP API}$
 
 เว็บอินเทอร์เฟซทำงานบน API ชุดเดียวกันนี้ Base URL คือ `http://localhost:5000`
 
@@ -209,7 +219,7 @@ curl http://localhost:5000/api/settings
 
 <a id="how-it-works"></a>
 
-## หลักการทำงาน
+## $\color{#1F6FEB}\textsf{หลักการทำงาน}$
 
 ![Processing pipeline](<ArcFace-Based Face Dataset Organizer — v1.0.0/docs/pipeline.svg>)
 
@@ -235,7 +245,7 @@ curl http://localhost:5000/api/settings
 
 <a id="security-and-privacy"></a>
 
-## ความปลอดภัยและความเป็นส่วนตัว
+## $\color{#1F6FEB}\textsf{ความปลอดภัยและความเป็นส่วนตัว}$
 
 - **เข้าถึงได้เฉพาะเครื่องนี้โดยค่าเริ่มต้น** — เซิร์ฟเวอร์รับการเชื่อมต่อที่ `127.0.0.1` เท่านั้น
 - **ไม่มีระบบยืนยันตัวตน** — ทุกคนที่เข้าถึงเซิร์ฟเวอร์ได้สามารถดูภาพย่อ เปลี่ยนชื่อและรวมบุคคล รวมถึงเริ่มหรือหยุดการประมวลผลได้ ใช้ `--host 0.0.0.0` เฉพาะในเครือข่ายที่เชื่อถือได้ และห้ามเปิดพอร์ตออกสู่อินเทอร์เน็ต
@@ -244,13 +254,13 @@ curl http://localhost:5000/api/settings
 
 <a id="responsible-use"></a>
 
-## การใช้งานอย่างรับผิดชอบ
+## $\color{#1F6FEB}\textsf{การใช้งานอย่างรับผิดชอบ}$
 
 การจดจำใบหน้าเป็นการประมวลผลข้อมูลชีวมิติ ซึ่งกฎหมายหลายฉบับถือเป็นข้อมูลส่วนบุคคลที่อ่อนไหว รวมถึงพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ของไทย และ General Data Protection Regulation (GDPR) ของสหภาพยุโรป ควรใช้เครื่องมือนี้กับคลังข้อมูลที่คุณมีสิทธิ์ประมวลผลเท่านั้น และต้องมีฐานทางกฎหมายรองรับ เช่น ความยินยอมของบุคคลในภาพ เครื่องมือนี้ไม่ได้ออกแบบมาเพื่อการเฝ้าระวัง การติดตามตัวบุคคล หรือการยืนยันตัวตน
 
 <a id="known-limitations"></a>
 
-## ข้อจำกัดที่ทราบ
+## $\color{#1F6FEB}\textsf{ข้อจำกัดที่ทราบ}$
 
 - สแกนเฉพาะชั้นบนสุดของ `Clean/` ไม่สแกนโฟลเดอร์ย่อย
 - ประมวลผลทีละไฟล์
@@ -260,7 +270,7 @@ curl http://localhost:5000/api/settings
 
 <a id="troubleshooting"></a>
 
-## การแก้ไขปัญหา
+## $\color{#1F6FEB}\textsf{การแก้ไขปัญหา}$
 
 | อาการ | วิธีแก้ |
 |---|---|
@@ -274,13 +284,13 @@ curl http://localhost:5000/api/settings
 
 <a id="changelog"></a>
 
-## บันทึกการเปลี่ยนแปลง
+## $\color{#1F6FEB}\textsf{บันทึกการเปลี่ยนแปลง}$
 
 ดู [CHANGELOG.md](CHANGELOG.md)
 
 <a id="license"></a>
 
-## สัญญาอนุญาต
+## $\color{#1F6FEB}\textsf{สัญญาอนุญาต}$
 
 ซอร์สโค้ดในรีโพสิทอรีนี้เผยแพร่ภายใต้ [MIT License](LICENSE)
 
@@ -290,7 +300,7 @@ curl http://localhost:5000/api/settings
 
 <a id="credits"></a>
 
-## เครดิต
+## $\color{#1F6FEB}\textsf{เครดิต}$
 
 - **[InsightFace](https://github.com/deepinsight/insightface)** — ไลบรารีและโมเดล `buffalo_l` (ArcFace) ที่ใช้ตรวจจับใบหน้าและสร้าง embedding
 - **ArcFace** — Deng et al., *ArcFace: Additive Angular Margin Loss for Deep Face Recognition*, CVPR 2019
